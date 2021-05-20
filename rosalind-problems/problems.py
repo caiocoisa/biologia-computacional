@@ -67,6 +67,52 @@ def revc(dataset):
     s = "".join(x[1:])
     print(s)
 
+def fibo_rabbit(n, k):
+    month1 = 1
+    month2 = 1
+    for i in range(2, n):
+        population = month1 + (month2 * k)
+        month2 = month1
+        month1 = population
+    return population
+
+def fib(dataset):
+    dna = open(dataset, 'r')
+    line = dna.read()
+    lista = line.split(' ')
+    a = fibo_rabbit(int(lista[0]), int(lista[1]))
+    print(a)
+
+#
+def gc(dataset):
+    fasta = open(dataset, 'r')
+    fasta_stripped = (line.strip() for line in fasta)
+    fasta_splitted = (line.split(">") for line in fasta_stripped if line)
+
+    dic = {}
+    id_dna = ''
+    dna = ''
+    for info in fasta_splitted:
+        
+        if info[0] == '':
+            if id_dna != '' : dic[id_dna] = dna
+            id_dna = info[1]
+            dna = ''
+        
+        else:
+            dna = ''.join([dna, info[0]])
+
+    output = {}
+    for key, value in dic.items():
+        
+        qtd=0
+        for char in value:
+            if char in ['C', 'G']:
+                qtd += 1
+        perc = 100 * ( qtd/len(value))
+        output[key] = perc
+    print(output)
+
 if __name__ == '__main__':
     args = parse_args()
     id_lower = args.id_problem.lower()
@@ -77,3 +123,8 @@ if __name__ == '__main__':
         rna(args.dataset)
     elif id_lower == 'revc':
         revc(args.dataset)
+    elif id_lower == 'fib':
+        fib(args.dataset)
+    elif id_lower == 'gc':
+        gc(args.dataset)
+        
